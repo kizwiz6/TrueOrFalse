@@ -4,8 +4,8 @@
     {
         static void Main(string[] args)
         {
-            // Initialize and start the quiz
-            Quiz quiz = new Quiz();
+            // Create a quiz with a specific set of questions and answers
+            Quiz quiz = new Quiz(new DefaultQuestionProvider());
             quiz.Start();
         }
     }

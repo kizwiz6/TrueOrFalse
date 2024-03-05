@@ -6,52 +6,50 @@ using System.Threading.Tasks;
 
 namespace TrueOrFalse
 {
+    /// <summary>
+    /// Class representing quiz.
+    /// </summary>
     internal class Quiz
     {
-        // Array of questions
-        private string[] questions = new string[] {
-            "An eggplant is also known as an aubergine.",
-            "Eggplants are a species in the nightshade family.",
-            "According to botanical definition, eggplant is a vegetable.",
-            "When cut open, eggplants do not brown (oxidation)",
-            "Eggplants were originally domesticated from the wild species bitter apple"
-        };
+        private readonly IQuestionProvider questionProvider;
 
-        // Array of correct answers
-        private bool[] answers = new bool[] { true, true, false, false, true };
+        public Quiz(IQuestionProvider questionProvider)
+        {
+            this.questionProvider = questionProvider;
+        }
 
-        // Method to start the quiz
+        // Start the quiz
         public void Start()
         {
             // Welcome message
-            Console.WriteLine("Welcome to 'True or False?'\nPress Enter to begin:");
+            Console.WriteLine("Welcome to 'True or Flase?'\nPress Enter to begin:");
             string entry = Console.ReadLine();
 
             // Take the quiz
             TakeQuiz();
-
-            // Display the results
-            DisplayResults();
         }
 
         // Method to handle taking the quiz
         private void TakeQuiz()
         {
-            // Array to store user responses
-            bool[] responses = new bool[questions.Length];
+            // Retrieve questions and answers from the question provider
+            IEnumerable<(string, bool)> questionsAndAnswers = questionProvider.GetQuestionsAndAnswers();
+            List<(string, bool)> questionsAndAnswersList = new List<(string, bool)>(questionsAndAnswers);
+            bool[] responses = new bool[questionsAndAnswersList.Count];
+            int index = 0;
 
             // Iterate through each question
-            for (int i = 0; i < questions.Length; i++)
+            foreach (var (question, answer) in questionsAndAnswers)
             {
                 // Display the question
-                Console.WriteLine(questions[i]);
+                Console.WriteLine(question);
                 Console.WriteLine("True or false?");
-                // Get user response
-                responses[i] = GetUserResponse();
+                // Get user response and compare with the correct answer
+                responses[index++] = GetUserResponse() == answer;
             }
 
-            // Calculate the score
-            CalculateScore(responses);
+            // Calculate and display the score
+            CalculateAndDisplayScore(responses);
         }
 
         // Method to get user response for a question
@@ -72,29 +70,26 @@ namespace TrueOrFalse
         }
 
         // Method to calculate and display the score
-        private void CalculateScore(bool[] responses)
+        private void CalculateAndDisplayScore(bool[] responses)
         {
             int score = 0;
-            // Compare user responses with correct answers
-            for (int i = 0; i < responses.Length; i++)
+            int index = 0;
+
+            // Display user input and correct answers for each question
+            foreach (var (question, answer) in questionProvider.GetQuestionsAndAnswers())
             {
-                if (responses[i] == answers[i])
+                bool response = responses[index++];
+                Console.WriteLine($"Question: {question}");
+                Console.WriteLine($"Your Input: {(response ? "True" : "False")} | Correct Answer: {(answer ? "True" : "False")}");
+                Console.WriteLine();
+                if (response == answer)
+                {
                     score++;
+                }
             }
-            // Display the score
-            DisplayScore(score);
-        }
 
-        // Method to display the final score
-        private void DisplayScore(int score)
-        {
-            Console.WriteLine($"You got {score} out of {questions.Length} correct.");
-        }
-
-        // Method to display additional results (if needed)
-        private void DisplayResults()
-        {
-            // Additional logic for displaying results, if needed
+            // Display the final score
+            Console.WriteLine($"You got {score} out of {responses.Length} correct.");
         }
     }
 }
