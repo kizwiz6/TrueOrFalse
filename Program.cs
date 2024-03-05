@@ -4,29 +4,39 @@
     {
         static void Main(string[] args)
         {
-            // Do not edit these lines
+            // Welcome message
             Console.WriteLine("Welcome to 'True or False?'\nPress Enter to begin:");
-            string entry = Console.ReadLine();
+            string entry = Console.ReadLine(); // Waiting for user to press Enter
 
-            // Type your code below
-            string[] questions = new string[] { "An eggplant is also known as an aubergine.", "Eggplants are a species in the nightshade family.", "According to botanical definition, eggplant is a vegetable.", "When cut open, eggplants do not brown (oxidation)", "Eggplants were originalyl domesticated from the wild species bitter apple" };
-
-            bool[] answers = new bool[]
-            {
-        true,
-        true,
-        false,
-        false,
-        true
+            // Array of questions
+            string[] questions = new string[] {
+                "An eggplant is also known as an aubergine.",
+                "Eggplants are a species in the nightshade family.",
+                "According to botanical definition, eggplant is a vegetable.",
+                "When cut open, eggplants do not brown (oxidation)",
+                "Eggplants were originally domesticated from the wild species bitter apple"
             };
 
+            // Array of correct answers
+            bool[] answers = new bool[]
+            {
+                true,
+                true,
+                false,
+                false,
+                true
+            };
+
+            // Array to store user responses
             bool[] responses = new bool[questions.Length];
 
+            // Warning if the number of questions and answers don't match
             if (questions.Length != answers.Length)
             {
                 Console.WriteLine("Warning! The number of answers supplied does not match the number of questions.");
             }
 
+            // Iterating through questions and taking user input
             int askingIndex = 0;
             foreach (string question in questions)
             {
@@ -47,6 +57,7 @@
                 askingIndex++;
             }
 
+            // Scoring and displaying results
             int scoringIndex = 0;
             int score = 0;
 
@@ -64,6 +75,7 @@
 
             }
 
+            // Displaying final score
             Console.WriteLine($"You got {score} out of {questions.Length} correct.");
 
         }
